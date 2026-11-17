@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=seshka
+Comment=Kill what Claude Code left behind
+Exec=seshka-gui
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=Utility;System;Monitor;
+Keywords=claude;process;cleanup;
+StartupNotify=false
