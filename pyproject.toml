@@ -8,9 +8,10 @@ version = "0.1.0"
 description = "Kill what Claude Code left behind — Ubuntu/Linux system tray + CLI"
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY.md"]
 requires-python = ">=3.10"
-authors = [{ name = "Marcin" }]
+authors = [{ name = "PHP4U" }]
+maintainers = [{ name = "PHP4U" }]
 keywords = ["claude", "claude-code", "process", "cleanup", "linux", "ubuntu"]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -34,15 +35,16 @@ seshka = "seshka.cli:main"
 seshka-gui = "seshka.gui.app:main"
 
 [project.urls]
-Homepage = "https://github.com/marcins/seshka-linux"
-Issues = "https://github.com/marcins/seshka-linux/issues"
+Homepage = "https://github.com/php4umagento/seshka-linux"
+Repository = "https://github.com/php4umagento/seshka-linux"
+Issues = "https://github.com/php4umagento/seshka-linux/issues"
 Upstream = "https://github.com/jigjoy-ai/seshka"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-seshka = ["gui/icons/*.png", "gui/icons/*.svg"]
+seshka = ["gui/icons/*.png", "gui/icons/*.svg", "gui/*.css"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

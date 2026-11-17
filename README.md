@@ -5,7 +5,13 @@
 Claude Code sessions end. The dev servers, watchers, and browsers they started often don’t.
 seshka-linux finds those processes on Ubuntu/Linux and lets you kill them — from a system tray app or the CLI.
 
+Maintained by [PHP4U](https://github.com/php4umagento).  
 Inspired by the macOS app [seshka](https://github.com/jigjoy-ai/seshka) by [JigJoy](https://jigjoy.ai).
+
+<p align="center">
+  <img src="docs/linux-gui-leftover.png" alt="seshka-linux leftover tab" width="420" />
+  <img src="docs/linux-gui-clean.png" alt="seshka-linux clean state" width="420" />
+</p>
 
 ## Features
 
@@ -26,15 +32,17 @@ Nothing is uploaded. seshka only reads `/proc` and signals your own processes.
 # system deps for the tray GUI (Ubuntu/Debian)
 sudo apt install python3-gi gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1
 
-pip install -e .
+git clone git@github.com:php4umagento/seshka-linux.git
+cd seshka-linux
+pip install -e ".[dev]"
 ```
+
 
 Optional: copy the desktop entry so you can launch from the app menu:
 
 ```bash
 mkdir -p ~/.local/share/applications
 cp packaging/seshka.desktop ~/.local/share/applications/
-# edit Exec= if your install path differs
 ```
 
 ## Usage
@@ -94,6 +102,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT © PHP4U — see [LICENSE](LICENSE).
 
-Upstream idea and macOS implementation: [jigjoy-ai/seshka](https://github.com/jigjoy-ai/seshka) (MIT).
+Third-party / upstream attribution (including reused matryoshka icons from JigJoy’s seshka):  
+[NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md).
+
+Upstream macOS app: [jigjoy-ai/seshka](https://github.com/jigjoy-ai/seshka) (MIT).

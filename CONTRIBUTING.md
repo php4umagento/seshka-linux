@@ -1,10 +1,12 @@
 # Contributing
 
-Thanks for helping improve seshka-linux.
+Thanks for helping improve seshka-linux (PHP4U).
 
 ## Setup
 
 ```bash
+git clone git@github.com:php4umagento/seshka-linux.git
+cd seshka-linux
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -28,6 +30,7 @@ Scanner/killer tests use a fake `/proc` tree (see `tests/conftest.py`). Prefer f
 
 - Core library is stdlib-only so the CLI works without GTK.
 - Detection mirrors [seshka](https://github.com/jigjoy-ai/seshka): `CLAUDECODE=1`, `CLAUDE_CODE_SESSION_ID`, `CLAUDE_PID`.
+- Reused upstream icons must keep JigJoy’s MIT notice — see [THIRD_PARTY.md](THIRD_PARTY.md).
 - Never kill processes matching user-configured protected patterns.
 - PID reuse: compare `/proc/<pid>/cmdline` before signalling.
 
@@ -35,4 +38,4 @@ Scanner/killer tests use a fake `/proc` tree (see `tests/conftest.py`). Prefer f
 
 - Keep changes focused.
 - Add or update tests for scanner/killer behaviour.
-- Run `pytest` before opening a PR.
+- Run `pytest` before opening a PR against `https://github.com/php4umagento/seshka-linux`.

@@ -187,12 +187,14 @@ class Store:
             bytes_freed = sum(p.memory for p in gone)
             with self._lock:
                 self.killing.difference_update(p.pid for p in targets)
+                message: Freed | None = None
                 if gone:
                     prev = self.freed
-                    self.freed = Freed(
+                    message = Freed(
                         bytes=(prev.bytes if prev else 0) + bytes_freed,
                         count=(prev.count if prev else 0) + len(gone),
                     )
+                    self.freed = message
                 pids = {p.pid for p in gone}
                 self.orphans = _removing(pids, self.orphans)
                 self.live = _removing(pids, self.live)
@@ -200,9 +202,21 @@ class Store:
                 for s in self.sessions:
                     s.procs = [p for p in s.procs if p.pid not in pids]
             self._notify()
+            if message is not None:
+                self._schedule_clear_freed(message)
             self.refresh()
 
         threading.Thread(target=work, daemon=True).start()
+
+    def _schedule_clear_freed(self, message: Freed, delay: float = 15.0) -> None:
+        def clear() -> None:
+            time.sleep(delay)
+            with self._lock:
+                if self.freed is message:
+                    self.freed = None
+            self._notify()
+
+        threading.Thread(target=clear, daemon=True).start()
 
     def kill_sync(self, procs: list[Proc]) -> tuple[int, int]:
         targets = [p for p in procs if not self.is_protected(p)]

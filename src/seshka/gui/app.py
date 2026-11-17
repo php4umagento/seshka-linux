@@ -12,7 +12,7 @@ gi.require_version("AyatanaAppIndicator3", "0.1")
 from gi.repository import AyatanaAppIndicator3 as AppIndicator3
 from gi.repository import GLib, Gtk
 
-from seshka.gui.icons import icon_path
+from seshka.gui.icons import icon_file
 from seshka.gui.window import MainWindow
 from seshka.store import Store
 
@@ -20,13 +20,14 @@ from seshka.store import Store
 class Application:
     def __init__(self) -> None:
         self.store = Store()
-        self.window = MainWindow(self.store)
+        self.window = MainWindow(self.store, on_quit=self._quit)
         self.indicator = AppIndicator3.Indicator.new(
             "seshka-linux",
-            icon_path("closed"),
+            icon_file("closed"),
             AppIndicator3.IndicatorCategory.APPLICATION_STATUS,
         )
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+        self.indicator.set_icon_full(icon_file("closed"), "clean")
         self.indicator.set_menu(self._build_menu())
         self.store.subscribe(lambda: GLib.idle_add(self._on_store_changed))
         self._timer_id: int | None = None
@@ -78,24 +79,17 @@ class Application:
 
     def _on_timer(self) -> bool:
         self.store.refresh()
-        # Recreate timer if interval changed
         self._restart_timer()
         return False
 
     def _on_store_changed(self) -> bool:
         count = self.store.orphan_count
-        self.indicator.set_icon_full(
-            icon_path("open" if count else "closed"),
-            f"{count} leftovers" if count else "clean",
-        )
-        if count:
-            self.indicator.set_label(str(count), "")
-        else:
-            self.indicator.set_label("", "")
+        kind = "open" if count else "closed"
+        self.indicator.set_icon_full(icon_file(kind), f"{count} leftovers" if count else "clean")
+        self.indicator.set_label(str(count) if count else "", "")
         self.kill_all_item.set_sensitive(bool(self.store.killable_orphans()))
         self.end_idle_item.set_sensitive(bool(self.store.idle_sessions_list()))
         self.window.rebuild()
-        # Keep timer in sync with settings changes
         return False
 
     def run(self) -> int:
@@ -105,7 +99,6 @@ class Application:
 
 
 def main(argv: list[str] | None = None) -> int:
-    # Allow Ctrl-C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     try:
         app = Application()
