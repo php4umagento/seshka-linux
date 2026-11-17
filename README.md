@@ -26,19 +26,55 @@ Inspired by the macOS app [seshka](https://github.com/jigjoy-ai/seshka) by [JigJ
 
 Nothing is uploaded. seshka only reads `/proc` and signals your own processes.
 
-## Install
+## Compatibility
+
+| Piece | Works on |
+|-------|----------|
+| **CLI** (`seshka list/kill`) | Any Linux with Python **3.10+** and `/proc` (Ubuntu, Debian, Fedora, Arch, openSUSE, …) |
+| **GUI** (`seshka-gui`) | Desktops with **GTK 3** + AppIndicator tray (GNOME+extension, XFCE, KDE often OK) |
+
+CLI has no GTK dependency — fine on headless servers.
+
+GUI system packages:
 
 ```bash
-# system deps for the tray GUI (Ubuntu/Debian)
+# Ubuntu / Debian
 sudo apt install python3-gi gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1
 
+# Fedora
+sudo dnf install python3-gobject gtk3 libappindicator-gtk3
+
+# Arch
+sudo pacman -S python-gobject gtk3 libayatana-appindicator
+```
+
+## Install
+
+### From a `.deb` (Ubuntu/Debian)
+
+```bash
+./scripts/build-deb.sh
+sudo apt install ./dist/seshka-linux_*_amd64.deb
+```
+
+### From a wheel / pip
+
+```bash
+./scripts/build-wheel.sh
+pip install dist/seshka_linux-*.whl
+# or from a clone:
+pip install .
+```
+
+### From source (dev)
+
+```bash
 git clone git@github.com:php4umagento/seshka-linux.git
 cd seshka-linux
 pip install -e ".[dev]"
 ```
 
-
-Optional: copy the desktop entry so you can launch from the app menu:
+Optional desktop menu entry (pip/source installs):
 
 ```bash
 mkdir -p ~/.local/share/applications
@@ -96,9 +132,20 @@ Session titles/projects are read from `~/.claude/projects` and `~/.claude/sessio
 ```bash
 pip install -e ".[dev]"
 pytest
+./scripts/build-wheel.sh
+./scripts/build-deb.sh
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Packaging
+
+| Artifact | Command | Install |
+|----------|---------|---------|
+| Wheel / sdist | `./scripts/build-wheel.sh` | `pip install dist/seshka_linux-*.whl` |
+| Debian package | `./scripts/build-deb.sh` | `sudo apt install ./dist/seshka-linux_*.deb` |
+
+CI builds these on every push (see `.github/workflows/ci.yml`).
 
 ## License
 

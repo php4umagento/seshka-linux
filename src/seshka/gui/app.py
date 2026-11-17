@@ -7,18 +7,18 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-gi.require_version("AyatanaAppIndicator3", "0.1")
 
-from gi.repository import AyatanaAppIndicator3 as AppIndicator3
 from gi.repository import GLib, Gtk
 
 from seshka.gui.icons import icon_file
+from seshka.gui.indicator import load_appindicator
 from seshka.gui.window import MainWindow
 from seshka.store import Store
 
 
 class Application:
     def __init__(self) -> None:
+        AppIndicator3 = load_appindicator()
         self.store = Store()
         self.window = MainWindow(self.store, on_quit=self._quit)
         self.indicator = AppIndicator3.Indicator.new(
@@ -105,8 +105,9 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         print(f"Failed to start GUI: {exc}", file=sys.stderr)
         print(
-            "Requires GTK 3 and Ayatana AppIndicator "
-            "(packages: gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1).",
+            "CLI still works: seshka list\n"
+            "GUI needs GTK 3 + AppIndicator "
+            "(Ubuntu: gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1).",
             file=sys.stderr,
         )
         return 1
